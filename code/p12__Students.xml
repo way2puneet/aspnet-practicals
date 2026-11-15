@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Student records of Government College, Ludhiana -->
+<Students>
+  <Student RollNo="BCA101">
+    <Name>Aman Verma</Name>
+    <Course>BCA</Course>
+    <City>Ludhiana</City>
+    <Marks>82</Marks>
+  </Student>
+  <Student RollNo="BCA102">
+    <Name>Simran Kaur</Name>
+    <Course>BCA</Course>
+    <City>Amritsar</City>
+    <Marks>91</Marks>
+  </Student>
+  <Student RollNo="MCA201">
+    <Name>Neha Gupta</Name>
+    <Course>MCA</Course>
+    <City>Ludhiana</City>
+    <Marks>88</Marks>
+  </Student>
+</Students>
