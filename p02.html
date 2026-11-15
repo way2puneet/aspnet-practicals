@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program 2: Implement HTML controls · Programming in ASP.NET</title>
+<meta name="description" content="Use HTML server controls to accept a student’s name, a library card choice and a city, and show the details when Submit is clicked.">
+<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a50c9'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3E.N%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="index.html">Programming in ASP.NET <span>· Practicals</span></a>
+  <nav class="topnav"><a href="index.html">Programs</a><a href="setup.html">Setup</a></nav>
+</div></header>
+<main class="wrap">
+<div class="kicker">Program 2 of 14</div>
+<h1>Implement HTML controls</h1>
+<p class="lead">Plain HTML input, check box and drop-down, turned into server controls.</p>
+<div class="meta"><span class="chip">Book: Program 2.6</span><span class="chip">No database needed</span></div>
+<div class="aim"><b>Aim</b>Use HTML server controls to accept a student’s name, a library card choice and a city, and show the details when Submit is clicked.</div>
+<nav class="toc"><a href="#learn">What you learn</a><a href="#code">Code</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#mistakes">Common mistakes</a><a href="#viva">Viva</a></nav>
+<h2 id="learn">What you will learn</h2><ul><li>The difference between an ordinary HTML control and an <b>HTML server control</b>.</li><li>How adding <code>runat="server"</code> and an <code>id</code> lets C# use a plain HTML element.</li><li>Reading HTML server controls in C#: <code>.Value</code>, <code>.Checked</code> and <code>.InnerText</code>.</li><li>Handling a click on the server with <code>onserverclick</code>.</li></ul>
+
+<h3>The idea in simple words</h3>
+<p>Normal HTML tags like <code>&lt;input&gt;</code> and <code>&lt;select&gt;</code> are handled only by the browser. The server cannot read or change them.</p>
+<p>Add two attributes, <code>id</code> and <code>runat="server"</code>, and the same tag becomes an <b>HTML server control</b>. Now C# can read it like an object. This is useful when you already have an HTML page and want to add server code to it.</p>
+<table class="t">
+<tr><th>HTML tag</th><th>Becomes this class on the server</th><th>Read it with</th></tr>
+<tr><td><code>&lt;input type="text"&gt;</code></td><td><code>HtmlInputText</code></td><td><code>.Value</code></td></tr>
+<tr><td><code>&lt;input type="checkbox"&gt;</code></td><td><code>HtmlInputCheckBox</code></td><td><code>.Checked</code></td></tr>
+<tr><td><code>&lt;select&gt;</code></td><td><code>HtmlSelect</code></td><td><code>.Value</code>, <code>.Items</code>, <code>.SelectedIndex</code></td></tr>
+<tr><td><code>&lt;span&gt;</code></td><td><code>HtmlGenericControl</code></td><td><code>.InnerText</code>, <code>.Style</code></td></tr>
+</table>
+
+<h2 id="code">Code</h2>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">HtmlControlsDemo.aspx</button><button role="tab" aria-selected="false">HtmlControlsDemo.aspx.cs</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/p02__HtmlControlsDemo.aspx" data-name="HtmlControlsDemo.aspx"><div class="where">Add a Web Form named <b>HtmlControlsDemo</b>.</div><pre class="lang-markup"><span class="ln"><span class="t-dir">&lt;%@ Page Language="C#" AutoEventWireup="true" CodeBehind="HtmlControlsDemo.aspx.cs" Inherits="StudentPortal.HtmlControlsDemo" %&gt;</span></span><span class="ln"><span class="t-dir">&lt;!DOCTYPE html&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">html</span> <span class="t-attr">xmlns</span>=<span class="t-val">"http://www.w3.org/1999/xhtml"</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">head</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">title</span><span class="t-punc">&gt;</span>HTML Server Controls<span class="t-punc">&lt;/</span><span class="t-tag">title</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">head</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">form</span> <span class="t-attr">id</span>=<span class="t-val">"form1"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span>Library Membership<span class="t-punc">&lt;/</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span></span><span class="ln">            Name: <span class="t-punc">&lt;</span><span class="t-tag">input</span> <span class="t-attr">type</span>=<span class="t-val">"text"</span> <span class="t-attr">id</span>=<span class="t-val">"txtStudent"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">maxlength</span>=<span class="t-val">"40"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">input</span> <span class="t-attr">type</span>=<span class="t-val">"checkbox"</span> <span class="t-attr">id</span>=<span class="t-val">"chkLibrary"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-punc">/&gt;</span> Library Card Required</span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            City:</span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">select</span> <span class="t-attr">id</span>=<span class="t-val">"selCity"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-tag">option</span> <span class="t-attr">value</span>=<span class="t-val">"LDH"</span><span class="t-punc">&gt;</span>Ludhiana<span class="t-punc">&lt;/</span><span class="t-tag">option</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-tag">option</span> <span class="t-attr">value</span>=<span class="t-val">"ASR"</span><span class="t-punc">&gt;</span>Amritsar<span class="t-punc">&lt;/</span><span class="t-tag">option</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-tag">option</span> <span class="t-attr">value</span>=<span class="t-val">"JAL"</span><span class="t-punc">&gt;</span>Jalandhar<span class="t-punc">&lt;/</span><span class="t-tag">option</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;/</span><span class="t-tag">select</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">input</span> <span class="t-attr">type</span>=<span class="t-val">"submit"</span> <span class="t-attr">id</span>=<span class="t-val">"btnSubmit"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">value</span>=<span class="t-val">"Submit"</span></span><span class="ln">                <span class="t-attr">onserverclick</span>=<span class="t-val">"btnSubmit_ServerClick"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">span</span> <span class="t-attr">id</span>=<span class="t-val">"spnResult"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-tag">span</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;/</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;/</span><span class="t-tag">form</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">html</span><span class="t-punc">&gt;</span></span></pre></div><div class="code-panel" data-src="code/p02__HtmlControlsDemo.aspx.cs" data-name="HtmlControlsDemo.aspx.cs"><pre class="lang-cs"><span class="ln"><span class="t-kw">using</span> <span class="t-type">System</span>;</span><span class="ln"> </span><span class="ln"><span class="t-kw">namespace</span> StudentPortal</span><span class="ln">{</span><span class="ln">    <span class="t-kw">public</span> <span class="t-kw">partial</span> <span class="t-kw">class</span> HtmlControlsDemo : <span class="t-type">System</span>.Web.UI.<span class="t-type">Page</span></span><span class="ln">    {</span><span class="ln">        <span class="t-kw">protected</span> <span class="t-kw">void</span> btnSubmit_ServerClick(<span class="t-kw">object</span> sender, <span class="t-type">EventArgs</span> e)</span><span class="ln">        {</span><span class="ln">            <span class="t-kw">string</span> name = txtStudent.Value.Trim();</span><span class="ln"> </span><span class="ln">            <span class="t-kw">if</span> (name == <span class="t-str">""</span>)</span><span class="ln">            {</span><span class="ln">                spnResult.InnerText = <span class="t-str">"Please enter your name."</span>;</span><span class="ln">                spnResult.Style[<span class="t-str">"color"</span>] = <span class="t-str">"red"</span>;</span><span class="ln">                <span class="t-kw">return</span>;</span><span class="ln">            }</span><span class="ln"> </span><span class="ln">            <span class="t-kw">string</span> card = chkLibrary.Checked ? <span class="t-str">"Yes"</span> : <span class="t-str">"No"</span>;</span><span class="ln">            <span class="t-kw">string</span> city = selCity.Items[selCity.SelectedIndex].Text;</span><span class="ln"> </span><span class="ln">            spnResult.InnerText = <span class="t-str">"Name: "</span> + name +</span><span class="ln">                <span class="t-str">" | Library Card: "</span> + card +</span><span class="ln">                <span class="t-str">" | City: "</span> + city +</span><span class="ln">                <span class="t-str">" (Code: "</span> + selCity.Value + <span class="t-str">")"</span>;</span><span class="ln">            spnResult.Style[<span class="t-str">"color"</span>] = <span class="t-str">"green"</span>;</span><span class="ln">        }</span><span class="ln">    }</span><span class="ln">}</span></pre></div></div>
+<h2 id="how">How it works</h2>
+<ol class="steps">
+<li><code class="snip">&lt;input type=&quot;text&quot; id=&quot;txtStudent&quot; runat=&quot;server&quot; maxlength=&quot;40&quot; /&gt;</code>A normal HTML text box. Because of <code>runat="server"</code>, C# can read it as <code>txtStudent</code>.</li>
+<li><code class="snip">&lt;select id=&quot;selCity&quot; runat=&quot;server&quot;&gt;
+    &lt;option value=&quot;LDH&quot;&gt;Ludhiana&lt;/option&gt; ...</code>Each option has text (Ludhiana) shown to the user and a value (LDH) sent to the server.</li>
+<li><code class="snip">&lt;input type=&quot;submit&quot; ... onserverclick=&quot;btnSubmit_ServerClick&quot; /&gt;</code>HTML server controls use <code>onserverclick</code> (not <code>OnClick</code>) to name the C# method that runs on the server.</li>
+<li><code class="snip">string name = txtStudent.Value.Trim();</code>HTML text boxes use <code>.Value</code>. (Web server controls like <code>asp:TextBox</code> use <code>.Text</code>.)</li>
+<li><code class="snip">string card = chkLibrary.Checked ? &quot;Yes&quot; : &quot;No&quot;;</code>The <code>? :</code> operator is a short if-else: "Yes" if the box is ticked, otherwise "No".</li>
+<li><code class="snip">string city = selCity.Items[selCity.SelectedIndex].Text;</code>Gets the text of the selected option. <code>selCity.Value</code> gives its value, such as ASR.</li>
+<li><code class="snip">spnResult.InnerText = ...;  spnResult.Style[&quot;color&quot;] = &quot;green&quot;;</code><code>InnerText</code> sets the text inside the span. <code>Style</code> sets its CSS, here the colour.</li>
+</ol>
+<h2 id="try">Try it</h2>
+<p>This works like the real page. Type, click, and watch which server events run.</p>
+<div class="tryblock">
+<div class="browser" id="demo1">
+  <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">https://localhost:44312/HtmlControlsDemo.aspx</span></div>
+  <div class="page"><h2>Library Membership</h2>
+Name: <input type="text" maxlength="40" data-id="txtStudent">
+<br><br>
+<input type="checkbox" data-id="chkLibrary"> Library Card Required
+<br><br>
+City:
+<select data-id="selCity"><option value="LDH">Ludhiana</option><option value="ASR">Amritsar</option><option value="JAL">Jalandhar</option></select>
+<br><br>
+<input type="button" value="Submit" data-id="btnSubmit">
+<br><br>
+<span data-id="spnResult"></span></div>
+  <div class="serverlog"><b>On the server:</b><span class="evs"><span class="ev">GET (first visit)</span></span><button class="reset" type="button" data-reset>Reset</button></div>
+</div>
+<p class="tryhint">Leave the name empty and click Submit, then fill it in, tick the box and pick a city.</p>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var root = document.getElementById("demo1"), D = window.Demo;
+  var START = root.querySelector(".page").innerHTML;
+  function init() {
+
+    D.$(root, "btnSubmit").addEventListener("click", function () {
+      D.postback(root, ["POST (postback)", "btnSubmit_ServerClick"], function () {
+        var name = D.val(root, "txtStudent").trim(), spn = D.$(root, "spnResult"), sel = D.$(root, "selCity");
+        if (name === "") { spn.textContent = "Please enter your name."; spn.style.color = "red"; return; }
+        var card = D.$(root, "chkLibrary").checked ? "Yes" : "No";
+        spn.textContent = "Name: " + name + " | Library Card: " + card + " | City: " + sel.options[sel.selectedIndex].text + " (Code: " + sel.value + ")";
+        spn.style.color = "green";
+      });
+    });
+  }
+  init();
+  root.querySelector("[data-reset]").addEventListener("click", function () {
+    root.querySelector(".page").innerHTML = START; D.log(root, ["GET (first visit)"]); init();
+  });
+});
+</script>
+</div>
+<h3 style="margin-top:22px">Sample run</h3>
+<table class="t"><tr><th style="width:45%">You do this</th><th>The page shows</th></tr><tr><td>Click <b>Submit</b> with the name empty</td><td><span class="out" style="color:var(--bad)">Please enter your name.</span></td></tr><tr><td>Name <code>Arjun Mehta</code>, tick the box, choose Amritsar, click <b>Submit</b></td><td><span class="out" style="color:var(--ok)">Name: Arjun Mehta | Library Card: Yes | City: Amritsar (Code: ASR)</span></td></tr></table>
+<h2 id="mistakes">Common mistakes</h2><ul><li>Using <code>.Text</code> on an HTML text box. HTML server controls use <code>.Value</code>.</li><li>Writing <code>onclick</code> instead of <code>onserverclick</code>. <code>onclick</code> runs JavaScript in the browser, not C# on the server.</li><li>Forgetting the <code>id</code> attribute. Without an id, C# has no name to use for the control.</li></ul>
+<h2 id="viva">Viva questions</h2><details><summary>What is an HTML server control?</summary><div>An ordinary HTML element with the attributes <code>id</code> and <code>runat="server"</code>. ASP.NET creates an object for it on the server, so C# can use it.</div></details><details><summary>Name two differences between HTML server controls and web server controls.</summary><div>HTML server controls are plain HTML tags (like <code>&lt;input&gt;</code>) with simple properties such as <code>Value</code>. Web server controls start with <code>asp:</code> (like <code>&lt;asp:TextBox&gt;</code>) and give more properties and events, such as validation and AutoPostBack.</div></details><details><summary>Which namespace contains HTML server control classes?</summary><div><code>System.Web.UI.HtmlControls</code>.</div></details><details><summary>What is the use of <code>onserverclick</code>?</summary><div>It connects a click on an HTML button to a C# method that runs on the server.</div></details><details><summary>What is the difference between Text and Value of a select option?</summary><div>The text (Amritsar) is shown to the user. The value (ASR) is what the program uses.</div></details>
+<nav class="pnav"><a href="p01.html"><small>← Program 1</small>Gain exposure to web applications and development tools</a><a class="next" href="p03.html"><small>Program 3 →</small>Implement server controls</a></nav>
+</main>
+<div class="wrap"><footer>Appendix to <i>Programming in ASP.NET</i> by Dr. Puneet Kumar.</footer></div>
+<script src="assets/app.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program 1: Gain exposure to web applications and development tools · Programming in ASP.NET</title>
+<meta name="description" content="Create a simple ASP.NET page that reads a name from a text box and shows a welcome message when a button is clicked.">
+<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a50c9'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3E.N%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="index.html">Programming in ASP.NET <span>· Practicals</span></a>
+  <nav class="topnav"><a href="index.html">Programs</a><a href="setup.html">Setup</a></nav>
+</div></header>
+<main class="wrap">
+<div class="kicker">Program 1 of 14</div>
+<h1>Gain exposure to web applications and development tools</h1>
+<p class="lead">Your first Web Form: type a name, click a button, see a message.</p>
+<div class="meta"><span class="chip">Book: Program 2.2</span><span class="chip">No database needed</span></div>
+<div class="aim"><b>Aim</b>Create a simple ASP.NET page that reads a name from a text box and shows a welcome message when a button is clicked.</div>
+<nav class="toc"><a href="#learn">What you learn</a><a href="#code">Code</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#mistakes">Common mistakes</a><a href="#viva">Viva</a></nav>
+<h2 id="learn">What you will learn</h2><ul><li>How to create and run an ASP.NET Web Forms page in Visual Studio.</li><li>The two files of every page: the design (<code>.aspx</code>) and the C# code (<code>.aspx.cs</code>).</li><li>What a <b>server control</b> is and why it needs <code>runat="server"</code>.</li><li>What a <b>postback</b> is: the page goes to the server, the C# code runs, and the page comes back.</li></ul>
+
+<h3>The idea in simple words</h3>
+<p>A web application runs on a <b>web server</b>. The browser asks for a page, the server runs your C# code, and sends back plain HTML. The browser never sees your C# code.</p>
+<p>When you click the button, the browser sends the form back to the same page on the server. This is called a <b>postback</b>. ASP.NET then runs the method connected to the button, <code>btnShow_Click</code>, which puts the message in the label.</p>
+<div class="note"><b>Development tools used:</b> <b>Visual Studio</b> (to write, build and run), <b>IIS Express</b> (the small web server that starts when you press <kbd>Ctrl</kbd> + <kbd>F5</kbd>), and your <b>browser</b> (to see the result). Steps to create the project are on the <a href="setup.html">Setup</a> page.</div>
+
+<h2 id="code">Code</h2>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">Welcome.aspx</button><button role="tab" aria-selected="false">Welcome.aspx.cs</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/p01__Welcome.aspx" data-name="Welcome.aspx"><div class="where">Design of the page. Add a Web Form named <b>Welcome</b> and paste this in Source view.</div><pre class="lang-markup"><span class="ln"><span class="t-dir">&lt;%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Welcome.aspx.cs" Inherits="StudentPortal.Welcome" %&gt;</span></span><span class="ln"><span class="t-dir">&lt;!DOCTYPE html&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">html</span> <span class="t-attr">xmlns</span>=<span class="t-val">"http://www.w3.org/1999/xhtml"</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">head</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">title</span><span class="t-punc">&gt;</span>Welcome Page<span class="t-punc">&lt;/</span><span class="t-tag">title</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">head</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">form</span> <span class="t-attr">id</span>=<span class="t-val">"form1"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span>Welcome Page<span class="t-punc">&lt;/</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span></span><span class="ln">            Enter your name:</span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:TextBox</span> <span class="t-attr">ID</span>=<span class="t-val">"txtName"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">MaxLength</span>=<span class="t-val">"40"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:TextBox</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Button</span> <span class="t-attr">ID</span>=<span class="t-val">"btnShow"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Show Message"</span> <span class="t-attr">OnClick</span>=<span class="t-val">"btnShow_Click"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Label</span> <span class="t-attr">ID</span>=<span class="t-val">"lblMessage"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">ForeColor</span>=<span class="t-val">"Green"</span> <span class="t-attr">Font-Bold</span>=<span class="t-val">"True"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:Label</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;/</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;/</span><span class="t-tag">form</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">html</span><span class="t-punc">&gt;</span></span></pre></div><div class="code-panel" data-src="code/p01__Welcome.aspx.cs" data-name="Welcome.aspx.cs"><div class="where">C# code of the page (code-behind).</div><pre class="lang-cs"><span class="ln"><span class="t-kw">using</span> <span class="t-type">System</span>;</span><span class="ln"> </span><span class="ln"><span class="t-kw">namespace</span> StudentPortal</span><span class="ln">{</span><span class="ln">    <span class="t-kw">public</span> <span class="t-kw">partial</span> <span class="t-kw">class</span> Welcome : <span class="t-type">System</span>.Web.UI.<span class="t-type">Page</span></span><span class="ln">    {</span><span class="ln">        <span class="t-kw">protected</span> <span class="t-kw">void</span> btnShow_Click(<span class="t-kw">object</span> sender, <span class="t-type">EventArgs</span> e)</span><span class="ln">        {</span><span class="ln">            <span class="t-kw">string</span> name = txtName.Text.Trim();</span><span class="ln"> </span><span class="ln">            <span class="t-kw">if</span> (name == <span class="t-str">""</span>)</span><span class="ln">            {</span><span class="ln">                lblMessage.ForeColor = <span class="t-type">System</span>.Drawing.Color.Red;</span><span class="ln">                lblMessage.Text = <span class="t-str">"Please enter your name."</span>;</span><span class="ln">            }</span><span class="ln">            <span class="t-kw">else</span></span><span class="ln">            {</span><span class="ln">                lblMessage.ForeColor = <span class="t-type">System</span>.Drawing.Color.Green;</span><span class="ln">                lblMessage.Text = <span class="t-str">"Welcome, "</span> + Server.HtmlEncode(name) +</span><span class="ln">                    <span class="t-str">"! You have successfully created your first Web Form."</span>;</span><span class="ln">            }</span><span class="ln">        }</span><span class="ln">    }</span><span class="ln">}</span></pre></div></div>
+<h2 id="how">How it works</h2>
+<ol class="steps">
+<li><code class="snip">&lt;%@ Page Language=&quot;C#&quot; ... CodeBehind=&quot;Welcome.aspx.cs&quot; Inherits=&quot;StudentPortal.Welcome&quot; %&gt;</code>The <b>@ Page directive</b> is the first line of every page. It says the language is C# and links this design file to the class <code>Welcome</code> in the code file.</li>
+<li><code class="snip">&lt;form id=&quot;form1&quot; runat=&quot;server&quot;&gt;</code>Every page has one server form. All controls must be inside it, otherwise they cannot send data back to the server.</li>
+<li><code class="snip">&lt;asp:TextBox ID=&quot;txtName&quot; runat=&quot;server&quot; MaxLength=&quot;40&quot;&gt;&lt;/asp:TextBox&gt;</code>A <b>server control</b>. <code>runat="server"</code> lets C# use it by its ID, <code>txtName</code>. <code>MaxLength</code> stops the user typing more than 40 characters.</li>
+<li><code class="snip">&lt;asp:Button ID=&quot;btnShow&quot; ... OnClick=&quot;btnShow_Click&quot; /&gt;</code><code>OnClick</code> names the C# method that runs on the server when the button is clicked.</li>
+<li><code class="snip">string name = txtName.Text.Trim();</code>Reads what the user typed. <code>Trim()</code> removes extra spaces at the start and end.</li>
+<li><code class="snip">if (name == &quot;&quot;) { ... &quot;Please enter your name.&quot; }</code>If nothing was typed, the label turns red and asks for a name.</li>
+<li><code class="snip">lblMessage.Text = &quot;Welcome, &quot; + Server.HtmlEncode(name) + &quot;! ...&quot;;</code>Otherwise the label shows the message in green. <code>Server.HtmlEncode()</code> makes sure that whatever the user types is shown as plain text and not run as HTML.</li>
+</ol>
+<h2 id="try">Try it</h2>
+<p>This works like the real page. Type, click, and watch which server events run.</p>
+<div class="tryblock">
+<div class="browser" id="demo1">
+  <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">https://localhost:44312/Welcome.aspx</span></div>
+  <div class="page"><h2>Welcome Page</h2>
+Enter your name:
+<input type="text" maxlength="40" data-id="txtName">
+<button type="button" data-id="btnShow">Show Message</button>
+<br><br>
+<span data-id="lblMessage" class="bold"></span></div>
+  <div class="serverlog"><b>On the server:</b><span class="evs"><span class="ev">GET (first visit)</span></span><button class="reset" type="button" data-reset>Reset</button></div>
+</div>
+<p class="tryhint">Try clicking <b>Show Message</b> with the box empty, then type a name and click again.</p>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var root = document.getElementById("demo1"), D = window.Demo;
+  var START = root.querySelector(".page").innerHTML;
+  function init() {
+
+    D.$(root, "btnShow").addEventListener("click", function () {
+      D.postback(root, ["POST (postback)", "btnShow_Click"], function () {
+        var name = D.val(root, "txtName").trim(), lbl = D.$(root, "lblMessage");
+        if (name === "") { lbl.className = "bold red"; lbl.textContent = "Please enter your name."; }
+        else { lbl.className = "bold green"; lbl.innerHTML = "Welcome, " + D.esc(name) + "! You have successfully created your first Web Form."; }
+      });
+    });
+  }
+  init();
+  root.querySelector("[data-reset]").addEventListener("click", function () {
+    root.querySelector(".page").innerHTML = START; D.log(root, ["GET (first visit)"]); init();
+  });
+});
+</script>
+</div>
+<h3 style="margin-top:22px">Sample run</h3>
+<table class="t"><tr><th style="width:45%">You do this</th><th>The page shows</th></tr><tr><td>Click <b>Show Message</b> with the box empty</td><td><span class="out" style="color:var(--bad)">Please enter your name.</span></td></tr><tr><td>Type <code>Simran</code> and click <b>Show Message</b></td><td><span class="out" style="color:var(--ok)">Welcome, Simran! You have successfully created your first Web Form.</span><br>The name stays in the text box after the postback.</td></tr></table>
+<h2 id="mistakes">Common mistakes</h2><ul><li>Pasting the .aspx code in <b>Design</b> view instead of <b>Source</b> view. Always switch to Source first.</li><li>Giving the Web Form a different name (for example <code>WebForm1</code>). The class name must match <code>Inherits="StudentPortal.Welcome"</code>.</li><li>Forgetting <code>runat="server"</code>. Without it, C# cannot find the control and you get "The name ... does not exist in the current context".</li><li>Writing <code>OnClick="btnShow_Click"</code> in the page but naming the method differently in C#. The two names must be the same.</li></ul>
+<h2 id="viva">Viva questions</h2><details><summary>What is ASP.NET?</summary><div>ASP.NET is a server-side framework from Microsoft, part of the .NET Framework, for building dynamic web pages and web applications.</div></details><details><summary>What is a postback?</summary><div>Sending the page back to the same page on the server, along with the values typed by the user. It happens when you click a button. The server runs the event handler and returns the updated page.</div></details><details><summary>What are the two main files of a Web Form?</summary><div>The <code>.aspx</code> file holds the design (HTML and server controls). The <code>.aspx.cs</code> file, called the code-behind file, holds the C# code.</div></details><details><summary>Why is <code>runat="server"</code> needed?</summary><div>It tells ASP.NET to create the control as an object on the server, so the C# code can read and change it using its ID.</div></details><details><summary>What is IIS Express?</summary><div>A small web server that comes with Visual Studio. It runs your pages on your own computer at an address such as <code>https://localhost:44312/</code>.</div></details><details><summary>Why is <code>Server.HtmlEncode()</code> used?</summary><div>It converts characters such as &lt; and &gt; into safe text, so anything the user types is shown as text and is never run as HTML or script.</div></details>
+<nav class="pnav"><a href="setup.html"><small>← Before you start</small>Setup</a><a class="next" href="p02.html"><small>Program 2 →</small>Implement HTML controls</a></nav>
+</main>
+<div class="wrap"><footer>Appendix to <i>Programming in ASP.NET</i> by Dr. Puneet Kumar.</footer></div>
+<script src="assets/app.js?v=1"></script>
+</body>
+</html>

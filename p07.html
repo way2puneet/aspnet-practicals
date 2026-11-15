@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program 7: Develop a web application using data controls · Programming in ASP.NET</title>
+<meta name="description" content="Show the students of a selected course in a GridView, using a SqlDataSource data control and no C# code.">
+<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a50c9'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3E.N%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="index.html">Programming in ASP.NET <span>· Practicals</span></a>
+  <nav class="topnav"><a href="index.html">Programs</a><a href="setup.html">Setup</a></nav>
+</div></header>
+<main class="wrap">
+<div class="kicker">Program 7 of 14</div>
+<h1>Develop a web application using data controls</h1>
+<p class="lead">Choose a course and a GridView lists its students. No C# code at all.</p>
+<div class="meta"><span class="chip">Book: Program 4.5</span><span class="chip db">Needs CollegeDB database</span></div>
+<div class="aim"><b>Aim</b>Show the students of a selected course in a GridView, using a SqlDataSource data control and no C# code.</div>
+<nav class="toc"><a href="#learn">What you learn</a><a href="#code">Code</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#mistakes">Common mistakes</a><a href="#viva">Viva</a></nav>
+<h2 id="learn">What you will learn</h2><ul><li>What <b>data controls</b> are: data source controls (like <code>SqlDataSource</code>) and data-bound controls (like <code>GridView</code>).</li><li>Reading the connection string from Web.config with <code>&lt;%$ ConnectionStrings:CollegeDB %&gt;</code>.</li><li>Passing a value from another control into the SQL query with a <code>ControlParameter</code>.</li><li>Connecting a GridView to a data source with <code>DataSourceID</code>.</li></ul>
+
+<h3>The idea in simple words</h3>
+<p>There are two kinds of data controls, and they work as a pair:</p>
+<ul>
+<li>A <b>data source control</b> (<code>SqlDataSource</code>) talks to the database. It is not shown on the page.</li>
+<li>A <b>data-bound control</b> (<code>GridView</code>) shows the data on the page.</li>
+</ul>
+<p>You connect them with one property: <code>DataSourceID="sdsStudents"</code>. The SqlDataSource runs the SELECT query, and the GridView draws one row for each record. ASP.NET does all of this by itself, so the code-behind file is empty.</p>
+<p>The query has a parameter, <code>@Course</code>. Its value comes from the drop-down list, through a <code>ControlParameter</code>. When the course changes, the grid shows the new students automatically.</p>
+
+<div class="note"><b>Before you run:</b> create the <code>CollegeDB</code> database and add the connection string to Web.config, as shown in <a href="setup.html">Setup</a>.</div>
+<h2 id="code">Code</h2>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">CourseStudents.aspx</button><button role="tab" aria-selected="false">CourseStudents.aspx.cs</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/p07__CourseStudents.aspx" data-name="CourseStudents.aspx"><div class="where">Add a Web Form named <b>CourseStudents</b>.</div><pre class="lang-markup"><span class="ln"><span class="t-dir">&lt;%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CourseStudents.aspx.cs" Inherits="StudentPortal.CourseStudents" %&gt;</span></span><span class="ln"><span class="t-dir">&lt;!DOCTYPE html&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">html</span> <span class="t-attr">xmlns</span>=<span class="t-val">"http://www.w3.org/1999/xhtml"</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">head</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">title</span><span class="t-punc">&gt;</span>Students by Course<span class="t-punc">&lt;/</span><span class="t-tag">title</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">head</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">form</span> <span class="t-attr">id</span>=<span class="t-val">"form1"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span>Students by Course<span class="t-punc">&lt;/</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span></span><span class="ln">            Course:</span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:DropDownList</span> <span class="t-attr">ID</span>=<span class="t-val">"ddlCourse"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">AutoPostBack</span>=<span class="t-val">"True"</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span>BCA<span class="t-punc">&lt;/</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span>BSc IT<span class="t-punc">&lt;/</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span>MCA<span class="t-punc">&lt;/</span><span class="t-asp">asp:ListItem</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;/</span><span class="t-asp">asp:DropDownList</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln"> </span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:SqlDataSource</span> <span class="t-attr">ID</span>=<span class="t-val">"sdsStudents"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span></span><span class="ln">                <span class="t-attr">ConnectionString</span>=<span class="t-val">"</span><span class="t-dir">&lt;%$ ConnectionStrings:CollegeDB %&gt;</span><span class="t-val">"</span></span><span class="ln">                <span class="t-attr">SelectCommand</span>=<span class="t-val">"SELECT RollNo, StudentName, Semester, City, Marks FROM Student WHERE Course = @Course ORDER BY RollNo"</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-tag">SelectParameters</span><span class="t-punc">&gt;</span></span><span class="ln">                    <span class="t-punc">&lt;</span><span class="t-asp">asp:ControlParameter</span> <span class="t-attr">Name</span>=<span class="t-val">"Course"</span> <span class="t-attr">ControlID</span>=<span class="t-val">"ddlCourse"</span> <span class="t-attr">PropertyName</span>=<span class="t-val">"SelectedValue"</span> <span class="t-attr">Type</span>=<span class="t-val">"String"</span> <span class="t-punc">/&gt;</span></span><span class="ln">                <span class="t-punc">&lt;/</span><span class="t-tag">SelectParameters</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;/</span><span class="t-asp">asp:SqlDataSource</span><span class="t-punc">&gt;</span></span><span class="ln"> </span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:GridView</span> <span class="t-attr">ID</span>=<span class="t-val">"gvStudents"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">DataSourceID</span>=<span class="t-val">"sdsStudents"</span></span><span class="ln">                <span class="t-attr">CellPadding</span>=<span class="t-val">"5"</span> <span class="t-attr">EmptyDataText</span>=<span class="t-val">"No students found."</span><span class="t-punc">&gt;</span></span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-tag">HeaderStyle</span> <span class="t-attr">BackColor</span>=<span class="t-val">"LightSteelBlue"</span> <span class="t-attr">Font-Bold</span>=<span class="t-val">"True"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;/</span><span class="t-asp">asp:GridView</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;/</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;/</span><span class="t-tag">form</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">html</span><span class="t-punc">&gt;</span></span></pre></div><div class="code-panel" data-src="code/p07__CourseStudents.aspx.cs" data-name="CourseStudents.aspx.cs"><div class="where">No code is needed. Visual Studio may add an empty <code>Page_Load</code>; you can leave it.</div><pre class="lang-cs"><span class="ln"><span class="t-kw">using</span> <span class="t-type">System</span>;</span><span class="ln"> </span><span class="ln"><span class="t-kw">namespace</span> StudentPortal</span><span class="ln">{</span><span class="ln">    <span class="t-kw">public</span> <span class="t-kw">partial</span> <span class="t-kw">class</span> CourseStudents : <span class="t-type">System</span>.Web.UI.<span class="t-type">Page</span></span><span class="ln">    {</span><span class="ln">    }</span><span class="ln">}</span></pre></div></div>
+<h2 id="how">How it works</h2>
+<ol class="steps">
+<li><code class="snip">&lt;asp:DropDownList ID=&quot;ddlCourse&quot; runat=&quot;server&quot; AutoPostBack=&quot;True&quot;&gt;</code>Changing the course posts the page back at once.</li>
+<li><code class="snip">ConnectionString=&quot;&lt;%$ ConnectionStrings:CollegeDB %&gt;&quot;</code>Reads the connection string named CollegeDB from Web.config. The database details are written only once, in Web.config.</li>
+<li><code class="snip">SelectCommand=&quot;SELECT RollNo, StudentName, Semester, City, Marks FROM Student WHERE Course = @Course ORDER BY RollNo&quot;</code>The query the data source runs. <code>@Course</code> is a parameter: a placeholder filled in safely just before the query runs.</li>
+<li><code class="snip">&lt;asp:ControlParameter Name=&quot;Course&quot; ControlID=&quot;ddlCourse&quot; PropertyName=&quot;SelectedValue&quot; Type=&quot;String&quot; /&gt;</code>Fills <code>@Course</code> with the <code>SelectedValue</code> of the drop-down list.</li>
+<li><code class="snip">&lt;asp:GridView ID=&quot;gvStudents&quot; runat=&quot;server&quot; DataSourceID=&quot;sdsStudents&quot; ... EmptyDataText=&quot;No students found.&quot;&gt;</code>The GridView gets its rows from <code>sdsStudents</code>. Its columns are created automatically from the field names. If there are no rows, it shows <code>EmptyDataText</code>.</li>
+</ol>
+<h2 id="try">Try it</h2>
+<p>This works like the real page. Type, click, and watch which server events run.</p>
+<div class="tryblock">
+<div class="browser" id="demo1">
+  <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">https://localhost:44312/CourseStudents.aspx</span></div>
+  <div class="page"><h2>Students by Course</h2>
+Course:
+<select data-id="ddlCourse"><option>BCA</option><option>BSc IT</option><option>MCA</option></select>
+<br><br>
+<div data-id="grid"></div></div>
+  <div class="serverlog"><b>On the server:</b><span class="evs"><span class="ev">GET (first visit)</span><span class="arrow">→</span><span class="ev">sdsStudents: SELECT ... WHERE Course = &#x27;BCA&#x27;</span></span><button class="reset" type="button" data-reset>Reset</button></div>
+</div>
+<p class="tryhint">Change the course. The data comes from the same sample records as the book.</p>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var root = document.getElementById("demo1"), D = window.Demo;
+  var START = root.querySelector(".page").innerHTML;
+  function init() {
+
+    var db = D.freshDB();
+    var cols = [["RollNo", "RollNo"], ["StudentName", "StudentName"], ["Semester", "Semester"], ["City", "City"], ["Marks", "Marks"]];
+    function bind() {
+      var c = D.val(root, "ddlCourse");
+      var rows = D.sortBy(db.students.filter(function (s) { return s.Course === c; }), "RollNo");
+      D.$(root, "grid").innerHTML = D.grid(rows, cols, { empty: "No students found." });
+      return c;
+    }
+    bind();
+    D.$(root, "ddlCourse").addEventListener("change", function () {
+      D.postback(root, null, function () { var c = bind(); return ["POST (AutoPostBack)", "sdsStudents: SELECT ... WHERE Course = '" + c + "'", "gvStudents binds itself"]; });
+    });
+  }
+  init();
+  root.querySelector("[data-reset]").addEventListener("click", function () {
+    root.querySelector(".page").innerHTML = START; D.log(root, ["GET (first visit)","sdsStudents: SELECT ... WHERE Course = 'BCA'"]); init();
+  });
+});
+</script>
+</div>
+<h3 style="margin-top:22px">Sample run</h3>
+<table class="t"><tr><th style="width:45%">You do this</th><th>The page shows</th></tr><tr><td>Open the page (BCA is selected)</td><td><span class="out">BCA101  Aman Verma    3  Ludhiana   82
+BCA102  Simran Kaur   3  Amritsar   91
+BCA103  Rohit Sharma  5  Jalandhar  76</span></td></tr><tr><td>Choose <b>MCA</b></td><td><span class="out">MCA201  Neha Gupta   1  Ludhiana    88
+MCA202  Priya Singh  1  Chandigarh  94</span></td></tr></table>
+<h2 id="mistakes">Common mistakes</h2><ul><li>Misspelling the connection string name. <code>CollegeDB</code> in the page must match <code>name="CollegeDB"</code> in Web.config exactly.</li><li>Writing <code>&lt;%= %&gt;</code> or <code>&lt;%# %&gt;</code> instead of <code>&lt;%$ %&gt;</code>. Only the <code>$</code> form reads from Web.config.</li><li>Forgetting <code>AutoPostBack="True"</code>, so the grid does not change until some other button is clicked.</li><li>The parameter name without @ in <code>Name="Course"</code> must match <code>@Course</code> in the query.</li></ul>
+<h2 id="viva">Viva questions</h2><details><summary>What are data controls?</summary><div>Controls used to work with data. Data source controls (SqlDataSource, ObjectDataSource, XmlDataSource) connect to the data, and data-bound controls (GridView, DetailsView, FormView, Repeater, DataList, ListView) display it.</div></details><details><summary>What is SqlDataSource?</summary><div>A data source control that connects to a SQL Server database and runs SELECT, INSERT, UPDATE and DELETE commands without C# code.</div></details><details><summary>What does DataSourceID do?</summary><div>It connects a data-bound control to a data source control by giving the ID of the data source. The control then binds itself.</div></details><details><summary>What is a ControlParameter?</summary><div>A parameter whose value is taken from a property of another control on the page, such as the SelectedValue of a DropDownList.</div></details><details><summary>Why is the connection string stored in Web.config?</summary><div>It is written once and used by every page, it can be changed without recompiling, and ASP.NET never sends Web.config to browsers.</div></details>
+<nav class="pnav"><a href="p06.html"><small>← Program 6</small>Design a web page using rich controls, validation controls and file concepts</a><a class="next" href="p08.html"><small>Program 8 →</small>Perform data binding with web controls</a></nav>
+</main>
+<div class="wrap"><footer>Appendix to <i>Programming in ASP.NET</i> by Dr. Puneet Kumar.</footer></div>
+<script src="assets/app.js?v=1"></script>
+</body>
+</html>

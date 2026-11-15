@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup · Programming in ASP.NET</title>
+<meta name="description" content="Set up Visual Studio, the project and the CollegeDB database.">
+<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a50c9'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3E.N%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="index.html">Programming in ASP.NET <span>· Practicals</span></a>
+  <nav class="topnav"><a href="index.html">Programs</a><a href="setup.html">Setup</a></nav>
+</div></header>
+<main class="wrap">
+
+<div class="kicker">Before you start</div>
+<h1>Setup</h1>
+<p class="lead">Do this once. After that, every program is just: add a page, paste the code, press <kbd>Ctrl</kbd> + <kbd>F5</kbd>.</p>
+
+<h2>1. Install the software</h2>
+<table class="t">
+<tr><th style="width:38%">Software</th><th>Why you need it</th></tr>
+<tr><td><b>Visual Studio 2022 Community</b> (free)</td><td>The IDE where you write and run the programs. While installing, tick the workload <b>ASP.NET and web development</b>.</td></tr>
+<tr><td><b>SQL Server Express</b> (free)</td><td>The database used by Programs 7 to 11 and 13. Install <b>SQL Server Management Studio (SSMS)</b> too, to run SQL scripts easily.</td></tr>
+</table>
+
+<h2>2. Create the project</h2>
+<ol>
+<li>Open Visual Studio and choose <b>Create a new project</b>.</li>
+<li>Select <b>ASP.NET Web Application (.NET Framework)</b> with the C# language.</li>
+<li>Name the project <code>StudentPortal</code> and choose <b>.NET Framework 4.8</b>.</li>
+<li>Choose the <b>Empty</b> template, tick <b>Web Forms</b>, and click <b>Create</b>.</li>
+</ol>
+<div class="note"><b>Why the name StudentPortal matters:</b> every program in the book starts with <code>namespace StudentPortal</code>. If your project has another name, change <code>StudentPortal</code> in both files of each page (the <code>Inherits</code> attribute in the .aspx file and the <code>namespace</code> in the .aspx.cs file).</div>
+
+<h2>3. Add a program to the project</h2>
+<ol>
+<li>In <b>Solution Explorer</b>, right-click the project → <b>Add</b> → <b>Web Form</b>. Give it the exact page name used by the program, for example <code>Welcome</code>.</li>
+<li>Open <code>Welcome.aspx</code>, switch to <b>Source</b> view, delete everything, and paste the .aspx code.</li>
+<li>Open <code>Welcome.aspx.cs</code> (expand the page in Solution Explorer), delete everything, and paste the .aspx.cs code.</li>
+<li>Right-click the page → <b>Set as Start Page</b>, then press <kbd>Ctrl</kbd> + <kbd>F5</kbd>. The page opens in your browser.</li>
+</ol>
+<p>Visual Studio keeps a third file, <code>Welcome.aspx.designer.cs</code>, up to date by itself. You never edit it.</p>
+
+<h2>4. Replace Web.config</h2>
+<p>Open <code>Web.config</code> in the project and replace it with the file below. It stores the database connection string and switches off a setting that otherwise stops validation controls from working in an Empty project.</p>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">Web.config</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/common__Web.config" data-name="Web.config"><div class="where">Project root. Program 13 uses its own version of this file with security settings.</div><pre class="lang-markup"><span class="ln"><span class="t-dir">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">configuration</span><span class="t-punc">&gt;</span></span><span class="ln">  <span class="t-punc">&lt;</span><span class="t-tag">connectionStrings</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">add</span> <span class="t-attr">name</span>=<span class="t-val">"CollegeDB"</span></span><span class="ln">         <span class="t-attr">connectionString</span>=<span class="t-val">"Data Source=.\SQLEXPRESS;Initial Catalog=CollegeDB;Integrated Security=True"</span></span><span class="ln">         <span class="t-attr">providerName</span>=<span class="t-val">"System.Data.SqlClient"</span> <span class="t-punc">/&gt;</span></span><span class="ln">  <span class="t-punc">&lt;/</span><span class="t-tag">connectionStrings</span><span class="t-punc">&gt;</span></span><span class="ln">  <span class="t-punc">&lt;</span><span class="t-tag">appSettings</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">add</span> <span class="t-attr">key</span>=<span class="t-val">"ValidationSettings:UnobtrusiveValidationMode"</span> <span class="t-attr">value</span>=<span class="t-val">"None"</span> <span class="t-punc">/&gt;</span></span><span class="ln">  <span class="t-punc">&lt;/</span><span class="t-tag">appSettings</span><span class="t-punc">&gt;</span></span><span class="ln">  <span class="t-punc">&lt;</span><span class="t-tag">system.web</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">compilation</span> <span class="t-attr">debug</span>=<span class="t-val">"true"</span> <span class="t-attr">targetFramework</span>=<span class="t-val">"4.8"</span> <span class="t-punc">/&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">httpRuntime</span> <span class="t-attr">targetFramework</span>=<span class="t-val">"4.8"</span> <span class="t-punc">/&gt;</span></span><span class="ln">  <span class="t-punc">&lt;/</span><span class="t-tag">system.web</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">configuration</span><span class="t-punc">&gt;</span></span></pre></div></div>
+<div class="note"><b>Using LocalDB instead of SQL Server Express?</b> Change the data source to <code>Data Source=(localdb)\MSSQLLocalDB</code>. Everything else stays the same.</div>
+
+<h2>5. Create the CollegeDB database</h2>
+<p>Open SSMS, connect to <code>.\SQLEXPRESS</code>, click <b>New Query</b>, paste this script and press <kbd>F5</kbd>. It creates the database, two tables and the sample records used in the book.</p>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">CollegeDB.sql</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/common__CollegeDB.sql" data-name="CollegeDB.sql"><div class="where">Run once in SQL Server Management Studio.</div><pre class="lang-sql"><span class="ln"><span class="t-kw">CREATE</span> <span class="t-kw">DATABASE</span> CollegeDB;</span><span class="ln"><span class="t-kw">GO</span></span><span class="ln"> </span><span class="ln"><span class="t-kw">USE</span> CollegeDB;</span><span class="ln"><span class="t-kw">GO</span></span><span class="ln"> </span><span class="ln"><span class="t-kw">CREATE</span> <span class="t-kw">TABLE</span> Course</span><span class="ln">(</span><span class="ln">    CourseCode    <span class="t-kw">VARCHAR</span>(<span class="t-num">10</span>)   <span class="t-kw">NOT</span> <span class="t-kw">NULL</span> <span class="t-kw">PRIMARY</span> <span class="t-kw">KEY</span>,</span><span class="ln">    CourseName    <span class="t-kw">VARCHAR</span>(<span class="t-num">60</span>)   <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    DurationYears <span class="t-kw">INT</span>           <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    AnnualFee     <span class="t-kw">DECIMAL</span>(<span class="t-num">10</span>,<span class="t-num">2</span>) <span class="t-kw">NOT</span> <span class="t-kw">NULL</span></span><span class="ln">);</span><span class="ln"> </span><span class="ln"><span class="t-kw">CREATE</span> <span class="t-kw">TABLE</span> Student</span><span class="ln">(</span><span class="ln">    StudentID   <span class="t-kw">INT</span> <span class="t-kw">IDENTITY</span>(<span class="t-num">1</span>,<span class="t-num">1</span>) <span class="t-kw">PRIMARY</span> <span class="t-kw">KEY</span>,</span><span class="ln">    RollNo      <span class="t-kw">VARCHAR</span>(<span class="t-num">10</span>)  <span class="t-kw">NOT</span> <span class="t-kw">NULL</span> <span class="t-kw">UNIQUE</span>,</span><span class="ln">    StudentName <span class="t-kw">VARCHAR</span>(<span class="t-num">50</span>)  <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    Course      <span class="t-kw">VARCHAR</span>(<span class="t-num">10</span>)  <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    Semester    <span class="t-kw">INT</span>          <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    City        <span class="t-kw">VARCHAR</span>(<span class="t-num">30</span>)  <span class="t-kw">NOT</span> <span class="t-kw">NULL</span>,</span><span class="ln">    Marks       <span class="t-kw">INT</span>          <span class="t-kw">NOT</span> <span class="t-kw">NULL</span> <span class="t-kw">CHECK</span> (Marks <span class="t-kw">BETWEEN</span> <span class="t-num">0</span> <span class="t-kw">AND</span> <span class="t-num">100</span>)</span><span class="ln">);</span><span class="ln"><span class="t-kw">GO</span></span><span class="ln"> </span><span class="ln"><span class="t-kw">INSERT</span> <span class="t-kw">INTO</span> Course (CourseCode, CourseName, DurationYears, AnnualFee) <span class="t-kw">VALUES</span></span><span class="ln">(<span class="t-str">'BCA'</span>,    <span class="t-str">'Bachelor of Computer Applications'</span>, <span class="t-num">3</span>, <span class="t-num">45000.00</span>),</span><span class="ln">(<span class="t-str">'BSc IT'</span>, <span class="t-str">'B.Sc. Information Technology'</span>,      <span class="t-num">3</span>, <span class="t-num">40000.00</span>),</span><span class="ln">(<span class="t-str">'MCA'</span>,    <span class="t-str">'Master of Computer Applications'</span>,   <span class="t-num">2</span>, <span class="t-num">60000.00</span>);</span><span class="ln"> </span><span class="ln"><span class="t-kw">INSERT</span> <span class="t-kw">INTO</span> Student (RollNo, StudentName, Course, Semester, City, Marks) <span class="t-kw">VALUES</span></span><span class="ln">(<span class="t-str">'BCA101'</span>, <span class="t-str">'Aman Verma'</span>,   <span class="t-str">'BCA'</span>,    <span class="t-num">3</span>, <span class="t-str">'Ludhiana'</span>,   <span class="t-num">82</span>),</span><span class="ln">(<span class="t-str">'BCA102'</span>, <span class="t-str">'Simran Kaur'</span>,  <span class="t-str">'BCA'</span>,    <span class="t-num">3</span>, <span class="t-str">'Amritsar'</span>,   <span class="t-num">91</span>),</span><span class="ln">(<span class="t-str">'BCA103'</span>, <span class="t-str">'Rohit Sharma'</span>, <span class="t-str">'BCA'</span>,    <span class="t-num">5</span>, <span class="t-str">'Jalandhar'</span>,  <span class="t-num">76</span>),</span><span class="ln">(<span class="t-str">'MCA201'</span>, <span class="t-str">'Neha Gupta'</span>,   <span class="t-str">'MCA'</span>,    <span class="t-num">1</span>, <span class="t-str">'Ludhiana'</span>,   <span class="t-num">88</span>),</span><span class="ln">(<span class="t-str">'BSC301'</span>, <span class="t-str">'Arjun Mehta'</span>,  <span class="t-str">'BSc IT'</span>, <span class="t-num">3</span>, <span class="t-str">'Patiala'</span>,    <span class="t-num">69</span>),</span><span class="ln">(<span class="t-str">'MCA202'</span>, <span class="t-str">'Priya Singh'</span>,  <span class="t-str">'MCA'</span>,    <span class="t-num">1</span>, <span class="t-str">'Chandigarh'</span>, <span class="t-num">94</span>);</span><span class="ln"><span class="t-kw">GO</span></span></pre></div></div>
+
+<h2>If something goes wrong</h2>
+<table class="t">
+<tr><th style="width:42%">Error message</th><th>What to do</th></tr>
+<tr><td>WebForms UnobtrusiveValidationMode requires a ScriptResourceMapping for 'jquery'</td><td>Your Web.config is missing the <code>ValidationSettings:UnobtrusiveValidationMode</code> line. Use the Web.config above.</td></tr>
+<tr><td>Could not load type 'StudentPortal.Welcome'</td><td>The namespace or class name does not match the page. Check the <code>Inherits</code> attribute and the class name, then rebuild with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd>.</td></tr>
+<tr><td>The name 'txtName' does not exist in the current context</td><td>The control ID in the .aspx file and the name used in C# are different, or the page was pasted in Design view. Paste in Source view and save both files.</td></tr>
+<tr><td>A network-related or instance-specific error occurred while establishing a connection to SQL Server</td><td>SQL Server is not running, or the server name in the connection string is wrong. Check the name you use to connect in SSMS.</td></tr>
+<tr><td>Cannot open database "CollegeDB"</td><td>The database script has not been run yet. Run <code>CollegeDB.sql</code>.</td></tr>
+</table>
+
+<nav class="pnav"><a href="index.html"><small>← Back</small>All programs</a><a class="next" href="p01.html"><small>Start →</small>Program 1</a></nav>
+
+</main>
+<div class="wrap"><footer>Appendix to <i>Programming in ASP.NET</i> by Dr. Puneet Kumar.</footer></div>
+<script src="assets/app.js?v=1"></script>
+</body>
+</html>

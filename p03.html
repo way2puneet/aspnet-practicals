@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Program 3: Implement server controls · Programming in ASP.NET</title>
+<meta name="description" content="Build a feedback form that uses the TextChanged, CheckedChanged and Click events of server controls.">
+<link rel="stylesheet" href="assets/style.css?v=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%233a50c9'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' font-weight='700' fill='white' text-anchor='middle'%3E.N%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <a class="brand" href="index.html">Programming in ASP.NET <span>· Practicals</span></a>
+  <nav class="topnav"><a href="index.html">Programs</a><a href="setup.html">Setup</a></nav>
+</div></header>
+<main class="wrap">
+<div class="kicker">Program 3 of 14</div>
+<h1>Implement server controls</h1>
+<p class="lead">A feedback form where server controls react to typing, ticking and clicking.</p>
+<div class="meta"><span class="chip">Book: Program 2.5</span><span class="chip">No database needed</span></div>
+<div class="aim"><b>Aim</b>Build a feedback form that uses the TextChanged, CheckedChanged and Click events of server controls.</div>
+<nav class="toc"><a href="#learn">What you learn</a><a href="#code">Code</a><a href="#how">How it works</a><a href="#try">Try it</a><a href="#mistakes">Common mistakes</a><a href="#viva">Viva</a></nav>
+<h2 id="learn">What you will learn</h2><ul><li>Server controls have <b>events</b>, just like buttons in a desktop program.</li><li>The three common events: <code>Click</code>, <code>TextChanged</code> and <code>CheckedChanged</code>.</li><li>Why <code>AutoPostBack="True"</code> is needed to handle an event immediately.</li><li>Showing and hiding a group of controls with a <code>Panel</code> and its <code>Visible</code> property.</li></ul>
+
+<h3>The idea in simple words</h3>
+<p>A <b>server control</b> is a control with <code>runat="server"</code>. It is an object on the server, so it has properties (like <code>Text</code>) and <b>events</b> (like <code>Click</code>).</p>
+<p>A button always sends the page to the server. A text box or check box normally does not. If you set <code>AutoPostBack="True"</code>, it posts the page back as soon as its value changes, and its event runs straight away.</p>
+<table class="t">
+<tr><th>Control</th><th>Event</th><th>When it runs</th></tr>
+<tr><td>TextBox</td><td><code>TextChanged</code></td><td>After the text changes and you click outside the box</td></tr>
+<tr><td>CheckBox</td><td><code>CheckedChanged</code></td><td>When the box is ticked or unticked</td></tr>
+<tr><td>Button</td><td><code>Click</code></td><td>When the button is clicked</td></tr>
+</table>
+
+<h2 id="code">Code</h2>
+<div class="code"><div class="code-tabs" role="tablist"><button role="tab" aria-selected="true">Feedback.aspx</button><button role="tab" aria-selected="false">Feedback.aspx.cs</button><span class="spacer"></span><button class="act dl" title="Download this file">Download</button><button class="act copy" title="Copy this file">Copy</button></div><div class="code-panel active" data-src="code/p03__Feedback.aspx" data-name="Feedback.aspx"><div class="where">Add a Web Form named <b>Feedback</b>.</div><pre class="lang-markup"><span class="ln"><span class="t-dir">&lt;%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Feedback.aspx.cs" Inherits="StudentPortal.Feedback" %&gt;</span></span><span class="ln"><span class="t-dir">&lt;!DOCTYPE html&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">html</span> <span class="t-attr">xmlns</span>=<span class="t-val">"http://www.w3.org/1999/xhtml"</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">head</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">title</span><span class="t-punc">&gt;</span>Feedback Form<span class="t-punc">&lt;/</span><span class="t-tag">title</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">head</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;</span><span class="t-tag">form</span> <span class="t-attr">id</span>=<span class="t-val">"form1"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span>Course Feedback Form<span class="t-punc">&lt;/</span><span class="t-tag">h2</span><span class="t-punc">&gt;</span></span><span class="ln"> </span><span class="ln">            Rate the course:</span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:RadioButton</span> <span class="t-attr">ID</span>=<span class="t-val">"rbExcellent"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Excellent"</span> <span class="t-attr">GroupName</span>=<span class="t-val">"Rating"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:RadioButton</span> <span class="t-attr">ID</span>=<span class="t-val">"rbGood"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Good"</span> <span class="t-attr">GroupName</span>=<span class="t-val">"Rating"</span> <span class="t-attr">Checked</span>=<span class="t-val">"true"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:RadioButton</span> <span class="t-attr">ID</span>=<span class="t-val">"rbAverage"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Average"</span> <span class="t-attr">GroupName</span>=<span class="t-val">"Rating"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln"> </span><span class="ln">            Comments:<span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:TextBox</span> <span class="t-attr">ID</span>=<span class="t-val">"txtComments"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">TextMode</span>=<span class="t-val">"MultiLine"</span> <span class="t-attr">Rows</span>=<span class="t-val">"4"</span> <span class="t-attr">Columns</span>=<span class="t-val">"40"</span></span><span class="ln">                <span class="t-attr">AutoPostBack</span>=<span class="t-val">"True"</span> <span class="t-attr">OnTextChanged</span>=<span class="t-val">"txtComments_TextChanged"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:TextBox</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Label</span> <span class="t-attr">ID</span>=<span class="t-val">"lblCount"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Characters typed: 0"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:Label</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln"> </span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:CheckBox</span> <span class="t-attr">ID</span>=<span class="t-val">"chkReply"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"I would like a reply by e-mail"</span></span><span class="ln">                <span class="t-attr">AutoPostBack</span>=<span class="t-val">"True"</span> <span class="t-attr">OnCheckedChanged</span>=<span class="t-val">"chkReply_CheckedChanged"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Panel</span> <span class="t-attr">ID</span>=<span class="t-val">"pnlEmail"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Visible</span>=<span class="t-val">"false"</span><span class="t-punc">&gt;</span></span><span class="ln">                E-mail Address:</span><span class="ln">                <span class="t-punc">&lt;</span><span class="t-asp">asp:TextBox</span> <span class="t-attr">ID</span>=<span class="t-val">"txtEmail"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">MaxLength</span>=<span class="t-val">"50"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:TextBox</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;/</span><span class="t-asp">asp:Panel</span><span class="t-punc">&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln"> </span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Button</span> <span class="t-attr">ID</span>=<span class="t-val">"btnSubmit"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">Text</span>=<span class="t-val">"Submit Feedback"</span> <span class="t-attr">OnClick</span>=<span class="t-val">"btnSubmit_Click"</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span><span class="t-punc">&lt;</span><span class="t-tag">br</span> <span class="t-punc">/&gt;</span></span><span class="ln">            <span class="t-punc">&lt;</span><span class="t-asp">asp:Label</span> <span class="t-attr">ID</span>=<span class="t-val">"lblThanks"</span> <span class="t-attr">runat</span>=<span class="t-val">"server"</span> <span class="t-attr">ForeColor</span>=<span class="t-val">"Green"</span><span class="t-punc">&gt;</span><span class="t-punc">&lt;/</span><span class="t-asp">asp:Label</span><span class="t-punc">&gt;</span></span><span class="ln">        <span class="t-punc">&lt;/</span><span class="t-tag">div</span><span class="t-punc">&gt;</span></span><span class="ln">    <span class="t-punc">&lt;/</span><span class="t-tag">form</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">body</span><span class="t-punc">&gt;</span></span><span class="ln"><span class="t-punc">&lt;/</span><span class="t-tag">html</span><span class="t-punc">&gt;</span></span></pre></div><div class="code-panel" data-src="code/p03__Feedback.aspx.cs" data-name="Feedback.aspx.cs"><pre class="lang-cs"><span class="ln"><span class="t-kw">using</span> <span class="t-type">System</span>;</span><span class="ln"> </span><span class="ln"><span class="t-kw">namespace</span> StudentPortal</span><span class="ln">{</span><span class="ln">    <span class="t-kw">public</span> <span class="t-kw">partial</span> <span class="t-kw">class</span> Feedback : <span class="t-type">System</span>.Web.UI.<span class="t-type">Page</span></span><span class="ln">    {</span><span class="ln">        <span class="t-kw">protected</span> <span class="t-kw">void</span> txtComments_TextChanged(<span class="t-kw">object</span> sender, <span class="t-type">EventArgs</span> e)</span><span class="ln">        {</span><span class="ln">            lblCount.Text = <span class="t-str">"Characters typed: "</span> + txtComments.Text.Length;</span><span class="ln">        }</span><span class="ln"> </span><span class="ln">        <span class="t-kw">protected</span> <span class="t-kw">void</span> chkReply_CheckedChanged(<span class="t-kw">object</span> sender, <span class="t-type">EventArgs</span> e)</span><span class="ln">        {</span><span class="ln">            pnlEmail.Visible = chkReply.Checked;</span><span class="ln">        }</span><span class="ln"> </span><span class="ln">        <span class="t-kw">protected</span> <span class="t-kw">void</span> btnSubmit_Click(<span class="t-kw">object</span> sender, <span class="t-type">EventArgs</span> e)</span><span class="ln">        {</span><span class="ln">            <span class="t-kw">string</span> rating = <span class="t-str">"Good"</span>;</span><span class="ln">            <span class="t-kw">if</span> (rbExcellent.Checked)</span><span class="ln">            {</span><span class="ln">                rating = <span class="t-str">"Excellent"</span>;</span><span class="ln">            }</span><span class="ln">            <span class="t-kw">else</span> <span class="t-kw">if</span> (rbAverage.Checked)</span><span class="ln">            {</span><span class="ln">                rating = <span class="t-str">"Average"</span>;</span><span class="ln">            }</span><span class="ln"> </span><span class="ln">            <span class="t-kw">string</span> message = <span class="t-str">"Thank you for your feedback. Your rating: "</span> + rating + <span class="t-str">"."</span>;</span><span class="ln"> </span><span class="ln">            <span class="t-kw">if</span> (chkReply.Checked &amp;&amp; txtEmail.Text.Trim() != <span class="t-str">""</span>)</span><span class="ln">            {</span><span class="ln">                message += <span class="t-str">" A reply will be sent to "</span> + Server.HtmlEncode(txtEmail.Text.Trim()) + <span class="t-str">"."</span>;</span><span class="ln">            }</span><span class="ln"> </span><span class="ln">            lblThanks.Text = message;</span><span class="ln">        }</span><span class="ln">    }</span><span class="ln">}</span></pre></div></div>
+<h2 id="how">How it works</h2>
+<ol class="steps">
+<li><code class="snip">&lt;asp:RadioButton ... GroupName=&quot;Rating&quot; Checked=&quot;true&quot; /&gt;</code>Radio buttons with the same <code>GroupName</code> form one group, so only one can be selected. "Good" is selected at the start.</li>
+<li><code class="snip">&lt;asp:TextBox ID=&quot;txtComments&quot; ... AutoPostBack=&quot;True&quot; OnTextChanged=&quot;txtComments_TextChanged&quot;&gt;</code>When the comment changes and the user leaves the box, the page posts back and <code>txtComments_TextChanged</code> runs.</li>
+<li><code class="snip">lblCount.Text = &quot;Characters typed: &quot; + txtComments.Text.Length;</code><code>Length</code> gives the number of characters in the text.</li>
+<li><code class="snip">&lt;asp:Panel ID=&quot;pnlEmail&quot; runat=&quot;server&quot; Visible=&quot;false&quot;&gt;</code>A Panel is a box that holds other controls. When it is not visible, nothing inside it is sent to the browser.</li>
+<li><code class="snip">pnlEmail.Visible = chkReply.Checked;</code>In <code>chkReply_CheckedChanged</code>: show the e-mail box when the check box is ticked, hide it when unticked.</li>
+<li><code class="snip">string rating = &quot;Good&quot;; if (rbExcellent.Checked) ... else if (rbAverage.Checked) ...</code>In <code>btnSubmit_Click</code>: find which radio button is selected and build the thank-you message.</li>
+</ol>
+<h2 id="try">Try it</h2>
+<p>This works like the real page. Type, click, and watch which server events run.</p>
+<div class="tryblock">
+<div class="browser" id="demo1">
+  <div class="browser-bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">https://localhost:44312/Feedback.aspx</span></div>
+  <div class="page"><h2>Course Feedback Form</h2>
+Rate the course:
+<input type="radio" name="p3rate" data-id="rbExcellent"> Excellent
+<input type="radio" name="p3rate" data-id="rbGood" checked> Good
+<input type="radio" name="p3rate" data-id="rbAverage"> Average
+<br><br>
+Comments:<br>
+<textarea rows="4" cols="40" data-id="txtComments"></textarea>
+<br>
+<span data-id="lblCount">Characters typed: 0</span>
+<br><br>
+<input type="checkbox" data-id="chkReply"> I would like a reply by e-mail
+<br>
+<div data-id="pnlEmail" style="display:none">E-mail Address: <input type="text" maxlength="50" data-id="txtEmail"></div>
+<br>
+<input type="button" value="Submit Feedback" data-id="btnSubmit">
+<br><br>
+<span data-id="lblThanks" class="green"></span></div>
+  <div class="serverlog"><b>On the server:</b><span class="evs"><span class="ev">GET (first visit)</span></span><button class="reset" type="button" data-reset>Reset</button></div>
+</div>
+<p class="tryhint">Type a comment, then click outside the box. Tick the e-mail option. Then submit.</p>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var root = document.getElementById("demo1"), D = window.Demo;
+  var START = root.querySelector(".page").innerHTML;
+  function init() {
+
+    D.$(root, "txtComments").addEventListener("change", function () {
+      D.postback(root, ["POST (AutoPostBack)", "txtComments_TextChanged"], function () {
+        D.$(root, "lblCount").textContent = "Characters typed: " + D.val(root, "txtComments").length;
+      });
+    });
+    D.$(root, "chkReply").addEventListener("change", function () {
+      D.postback(root, ["POST (AutoPostBack)", "chkReply_CheckedChanged"], function () {
+        D.$(root, "pnlEmail").style.display = D.$(root, "chkReply").checked ? "" : "none";
+      });
+    });
+    D.$(root, "btnSubmit").addEventListener("click", function () {
+      D.postback(root, ["POST (postback)", "btnSubmit_Click"], function () {
+        var rating = "Good";
+        if (D.$(root, "rbExcellent").checked) rating = "Excellent"; else if (D.$(root, "rbAverage").checked) rating = "Average";
+        var msg = "Thank you for your feedback. Your rating: " + rating + ".";
+        var email = D.val(root, "txtEmail").trim();
+        if (D.$(root, "chkReply").checked && email !== "") msg += " A reply will be sent to " + D.esc(email) + ".";
+        D.$(root, "lblThanks").innerHTML = msg;
+      });
+    });
+  }
+  init();
+  root.querySelector("[data-reset]").addEventListener("click", function () {
+    root.querySelector(".page").innerHTML = START; D.log(root, ["GET (first visit)"]); init();
+  });
+});
+</script>
+</div>
+<h3 style="margin-top:22px">Sample run</h3>
+<table class="t"><tr><th style="width:45%">You do this</th><th>The page shows</th></tr><tr><td>Type <code>The practical sessions were very useful.</code> and click outside the box</td><td><span class="out">Characters typed: 40</span></td></tr><tr><td>Tick <b>I would like a reply by e-mail</b></td><td>The e-mail box appears at once.</td></tr><tr><td>Select Excellent, enter <code>aman@example.com</code>, click <b>Submit Feedback</b></td><td><span class="out" style="color:var(--ok)">Thank you for your feedback. Your rating: Excellent. A reply will be sent to aman@example.com.</span></td></tr></table>
+<h2 id="mistakes">Common mistakes</h2><ul><li>Expecting <code>TextChanged</code> to run on every key press. It runs only after the text changes and the box loses focus (you click outside it).</li><li>Forgetting <code>AutoPostBack="True"</code>. Then <code>TextChanged</code> and <code>CheckedChanged</code> wait until the next button click.</li><li>Using different <code>GroupName</code> values for the radio buttons, so more than one can be selected.</li></ul>
+<h2 id="viva">Viva questions</h2><details><summary>What is a server control?</summary><div>A control with <code>runat="server"</code> that is created as an object on the server, with properties, methods and events, and that produces HTML for the browser.</div></details><details><summary>What does <code>AutoPostBack</code> do?</summary><div>When it is True, the control posts the page back to the server immediately when its value changes, so its event runs at once.</div></details><details><summary>Which event of a TextBox is used in this program?</summary><div><code>TextChanged</code>. It runs when the text has changed between two postbacks.</div></details><details><summary>What is the difference between <code>Visible</code> and <code>Enabled</code>?</summary><div>When Visible is false, the control is not sent to the browser at all. When Enabled is false, it is shown but greyed out and cannot be used.</div></details><details><summary>What is the use of <code>GroupName</code>?</summary><div>Radio buttons with the same GroupName belong to one group, so only one of them can be selected at a time.</div></details>
+<nav class="pnav"><a href="p02.html"><small>← Program 2</small>Implement HTML controls</a><a class="next" href="p04.html"><small>Program 4 →</small>Develop a web application using web controls</a></nav>
+</main>
+<div class="wrap"><footer>Appendix to <i>Programming in ASP.NET</i> by Dr. Puneet Kumar.</footer></div>
+<script src="assets/app.js?v=1"></script>
+</body>
+</html>
